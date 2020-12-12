@@ -25,7 +25,7 @@ export default function Form(props) {
             name="name"
             value={name}
             type="text"
-            placeholder={props.name}
+            placeholder={props.name || 'Enter Student Name'}
             onChange={(event) => setName(event.target.value)}
             /*
           This must be a controlled component
@@ -34,7 +34,6 @@ export default function Form(props) {
         </form>
         <InterviewerList
           interviewers={props.interviewers}
-          value={props.name}
           onChange={setInterviewer}
           interviewer={interviewer}
         />
@@ -44,7 +43,7 @@ export default function Form(props) {
           <Button onClick={cancel} danger>
             Cancel
           </Button>
-          <Button onClick={props.onSave} confirm>
+          <Button onClick={() => props.onSave(name, interviewer)} confirm>
             Save
           </Button>
         </section>

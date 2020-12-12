@@ -12,7 +12,7 @@ export default function Daylist(props) {
             key={interviewer.id}
             name={interviewer.name}
             avatar={interviewer.avatar}
-            selected={props.interviewer === interviewer.id}
+            selected={interviewer.id === props.interviewer}
             setInterviewer={(event) => props.onChange(interviewer.id)}
           />
         ))}

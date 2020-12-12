@@ -5,12 +5,13 @@ import 'components/InterviewerListItem.scss';
 export default function InterviewerListItem(props) {
   let interviewerClass = classnames('interviewers__item', {
     'interviewers__item--selected': props.selected,
+    'interviewers__item-image': props.selected,
   });
 
-  let interviewerName = '';
-  if (props.selected) {
-    interviewerName = props.name;
-  }
+  // let interviewerName = '';
+  // if (props.selected) {
+  //   interviewerName = props.name;
+  // }
 
   return (
     <li className={interviewerClass} onClick={props.setInterviewer}>
@@ -19,7 +20,7 @@ export default function InterviewerListItem(props) {
         src={props.avatar}
         alt={props.name}
       />
-      {interviewerName}
+      {props.selected && props.name}
     </li>
   );
 }
