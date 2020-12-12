@@ -1,4 +1,4 @@
-export default function getAppointmentsForDay(state, day) {
+export function getAppointmentsForDay(state, day) {
   const filteredDays = state.days.filter((element) => {
     return element.name === day;
   });
@@ -11,7 +11,24 @@ export default function getAppointmentsForDay(state, day) {
   return filteredAppointments;
 }
 
-// function selectUserByName(state, name) {
-//   const filteredNames = state.users.filter((user) => user.name === name);
-//   return filteredNames;
-// }
+export function getInterviewersForDay(state, day) {
+  const filteredDays = state.days.filter((element) => {
+    return element.name === day;
+  });
+  let filteredInterviewers = [];
+  if (filteredDays.length > 0) {
+    filteredInterviewers = filteredDays[0].interviewers.map((id) => {
+      return state.interviewers[id];
+    });
+  }
+  return filteredInterviewers;
+}
+
+export function getInterview(state, interview) {
+  if (!interview) {
+    return null;
+  }
+  const interviewCopy = { ...interview };
+  interviewCopy.interviewer = state.interviewers[interview.interviewer];
+  return interviewCopy;
+}
