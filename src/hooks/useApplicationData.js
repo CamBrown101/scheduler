@@ -1,69 +1,111 @@
-import { useState, useEffect } from 'react';
+import { useReducer, useEffect } from 'react';
 import axios from 'axios';
 
 export default function useApplicationData() {
+  const SET_DAY = 'SET_DAY';
+  const SET_APPLICATION_DATA = 'SET_APPLICATION_DATA';
+  const SET_INTERVIEW = 'SET_INTERVIEW';
+
+  const getEmptySpots = (state, nameOfDay) => {
+    const dayObject = state.days.find((day) => {
+      return day.name === nameOfDay;
+    });
+    const availibleSpaces = dayObject.appointments.filter((appointment) => {
+      return state.appointments[appointment].interview === null;
+    });
+    return availibleSpaces.length;
+  };
+
+  function reducer(state, action) {
+    switch (action.type) {
+      case SET_DAY:
+        return {
+          ...state,
+          day: action.value,
+        };
+
+      case SET_APPLICATION_DATA:
+        return {
+          ...state,
+          days: action.value[0].data,
+          appointments: action.value[1].data,
+          interviewers: action.value[2].data,
+        };
+
+      case SET_INTERVIEW: {
+        const appointment = {
+          ...state.appointments[action.id],
+          interview: action.interview && { ...action.interview },
+        };
+        const appointments = {
+          ...state.appointments,
+          [action.id]: appointment,
+        };
+
+        const stateCopy = {
+          ...state,
+          appointments,
+        };
+
+        const targetDay = state.days.find((day) =>
+          day.appointments.includes(action.id)
+        );
+
+        const days = state.days.map((day) => {
+          if (day.name === targetDay.name) {
+            return {
+              ...day,
+              spots: getEmptySpots(stateCopy, targetDay.name),
+            };
+          } else {
+            return day;
+          }
+        });
+
+        return {
+          ...state,
+          appointments: appointments,
+          days: days,
+        };
+      }
+
+      default:
+        throw new Error(
+          `Tried to reduce with unsupported action type: ${action.type}`
+        );
+    }
+  }
+
   useEffect(() => {
     Promise.all([
       axios.get('/api/days'),
       axios.get('/api/appointments'),
       axios.get('/api/interviewers'),
     ]).then((all) => {
-      setState((prev) => ({
-        ...prev,
-        days: all[0].data,
-        appointments: all[1].data,
-        interviewers: all[2].data,
-      }));
+      dispatch({ type: SET_APPLICATION_DATA, value: all });
     });
   }, []);
 
-  const [state, setState] = useState({
+  const [state, dispatch] = useReducer(reducer, {
     day: 'Monday',
     days: [],
     appointments: {},
     interviewers: {},
   });
 
-  const getSpots = (state) => {
-    return state.days.map((day) => {
-      const spots = day.appointments.filter(
-        (appointment) => !state.appointments[appointment].interview
-      ).length;
-      return { ...day, spots };
-    });
-  };
-
-  console.log(getSpots(state));
-
   function bookInterview(id, interview) {
-    const appointment = {
-      ...state.appointments[id],
-      interview: { ...interview },
-    };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment,
-    };
-
     return axios.put(`/api/appointments/${id}`, { interview }).then(() => {
-      setState((state) => ({ ...state, appointments }));
-      setState((state) => ({ ...state, days: getSpots(state) }));
+      dispatch({ type: SET_INTERVIEW, id, interview });
     });
   }
 
   function cancelInterview(id) {
-    const appointment = {
-      ...state.appointments[id],
-      interview: null,
-    };
-    const appointments = { ...state.appointments, [id]: appointment };
     return axios.delete(`/api/appointments/${id}`).then(() => {
-      setState({ ...state, appointments });
-      setState((state) => ({ ...state, days: getSpots(state) }));
+      dispatch({ type: SET_INTERVIEW, id, interview: null });
     });
   }
 
-  const setDay = (day) => setState({ ...state, day });
+  const setDay = (day) => dispatch({ type: SET_DAY, value: day });
 
-  return { state, setState, bookInterview, cancelInterview, setDay, getSpots };
+  return { state, bookInterview, cancelInterview, setDay };
 }

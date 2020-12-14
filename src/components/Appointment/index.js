@@ -18,6 +18,7 @@ const CONFIRM = 'CONFIRM';
 const EDIT = 'EDIT';
 const ERROR_SAVE = 'ERROR_SAVE';
 const ERROR_DELETE = 'ERROR_DELETE';
+const ERROR_EMPTY = 'ERROR_EMPTY';
 
 export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(
@@ -25,22 +26,22 @@ export default function Appointment(props) {
   );
 
   function save(name, interviewer) {
-    const interview = {
-      student: name,
-      interviewer,
-    };
-    transition(SAVING, true);
-    props
-      .bookInterview(props.id, interview)
-      .then(() => transition(SHOW))
-      .catch(() => transition(ERROR_SAVE, true));
+    if (interviewer && name) {
+      const interview = {
+        student: name,
+        interviewer,
+      };
+      transition(SAVING, true);
+      props
+        .bookInterview(props.id, interview)
+        .then(() => transition(SHOW))
+        .catch(() => transition(ERROR_SAVE, true));
+    } else {
+      transition(ERROR_EMPTY, true);
+    }
   }
 
-  function removeInterview(name, interviewer) {
-    const interview = {
-      student: name,
-      interviewer,
-    };
+  function removeInterview() {
     transition(DELETING, true);
     props
       .cancelInterview(props.id)
@@ -99,6 +100,12 @@ export default function Appointment(props) {
       {mode === DELETING && <Status message={DELETING} />}
       {mode === ERROR_DELETE && (
         <Error onClose={back} message={'There was an error deleting'} />
+      )}
+      {mode === ERROR_EMPTY && (
+        <Error
+          onClose={back}
+          message={'You must input a name and choose an interviewer'}
+        />
       )}
     </article>
   );
