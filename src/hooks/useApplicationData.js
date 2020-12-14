@@ -77,6 +77,10 @@ export default function useApplicationData() {
   }
 
   useEffect(() => {
+    const webSocket = new WebSocket('ws://localhost:8002', 'protocolOne');
+    webSocket.onopen = function (event) {
+      webSocket.send('Ping!');
+    };
     Promise.all([
       axios.get('/api/days'),
       axios.get('/api/appointments'),
