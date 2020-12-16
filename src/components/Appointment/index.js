@@ -26,19 +26,15 @@ export default function Appointment(props) {
   );
 
   function save(name, interviewer) {
-    if (interviewer && name) {
-      const interview = {
-        student: name,
-        interviewer,
-      };
-      transition(SAVING, true);
-      props
-        .bookInterview(props.id, interview)
-        .then(() => transition(SHOW))
-        .catch(() => transition(ERROR_SAVE, true));
-    } else {
-      transition(ERROR_EMPTY, true);
-    }
+    const interview = {
+      student: name,
+      interviewer,
+    };
+    transition(SAVING, true);
+    props
+      .bookInterview(props.id, interview)
+      .then(() => transition(SHOW))
+      .catch(() => transition(ERROR_SAVE, true));
   }
 
   function removeInterview() {
@@ -50,7 +46,7 @@ export default function Appointment(props) {
   }
 
   return (
-    <article className="appointment">
+    <article data-testid="appointment" className="appointment">
       <Header time={props.time} />
       {mode === EMPTY && <Empty onAdd={() => transition('CREATE')} />}
       {mode === SHOW && (
