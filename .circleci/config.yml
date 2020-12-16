@@ -1,91 +1,50 @@
-!!map {
-  !!str 'deploy':
-    !!map {
-      !!str 'machine': !!map { !!str 'enabled': !!bool 'true' },
-      !!str 'steps':
-        !!seq [
-          !!map {
-            !!str 'add_ssh_keys':
-              !!map {
-                !!str 'fingerprints':
-                  !!seq [
-                    !!str '1a:4c:32:8b:b7:19:b9:a2:9f:bf:6c:e0:2a:ae:5f:98',
-                  ],
-              },
-          },
-          !!str 'checkout',
-          !!map {
-            !!str 'run':
-              !!map {
-                !!str 'command': !!str "git push https://github.com/CamBrown101/scheduler.git master:production\n",
-                !!str 'name': !!str 'Push Master to Production',
-              },
-          },
-        ],
-      !!str 'working_directory': !!str '~/client',
-    },
-  !!str 'jobs':
-    !!map {
-      !!str 'build':
-        !!map {
-          !!str 'docker':
-            !!seq [!!map { !!str 'image': !!str 'circleci/node:10.16' }],
-          !!str 'steps':
-            !!seq [
-              !!str 'checkout',
-              !!map {
-                !!str 'restore_cache':
-                  !!map {
-                    !!str 'keys':
-                      !!seq [
-                        !!str 'v1-dependencies-{{ checksum "package.json" }}',
-                        !!str 'v1-dependencies-',
-                      ],
-                  },
-              },
-              !!map { !!str 'run': !!str 'npm install' },
-              !!map {
-                !!str 'save_cache':
-                  !!map {
-                    !!str 'key': !!str 'v1-dependencies-{{ checksum "package.json" }}',
-                    !!str 'paths': !!seq [!!str 'node_modules'],
-                  },
-              },
-              !!map { !!str 'run': !!str 'npm test' },
-            ],
-          !!str 'working_directory': !!str '~/client',
-        },
-    },
-  !!str 'version': !!int '2',
-  !!str 'workflows':
-    !!map {
-      !!str 'test_and_deploy':
-        !!map {
-          !!str 'jobs':
-            !!seq [
-              !!map {
-                !!str 'build':
-                  !!map {
-                    !!str 'filters':
-                      !!map {
-                        !!str 'branches':
-                          !!map { !!str 'ignore': !!str 'production' },
-                      },
-                  },
-              },
-              !!map {
-                !!str 'deploy':
-                  !!map {
-                    !!str 'filters':
-                      !!map {
-                        !!str 'branches':
-                          !!map { !!str 'ignore': !!str 'production' },
-                      },
-                    !!str 'requires': !!seq [!!str 'build'],
-                  },
-              },
-            ],
-        },
-      !!str 'version': !!int '2',
-    },
-}
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10.16
+
+    working_directory: ~/client
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run: npm test
+deploy:
+  machine:
+    enabled: true
+
+  working_directory: ~/client
+
+  steps:
+    - add_ssh_keys:
+        fingerprints:
+          - '1a:4c:32:8b:b7:19:b9:a2:9f:bf:6c:e0:2a:ae:5f:98'
+    - checkout
+    - run:
+        name: Push Master to Production
+        command: |
+          git push https://github.com/CamBrown101/scheduler.git master:production
+
+workflows:
+  version: 2
+  test_and_deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: production
+      - deploy:
+          filters:
+            branches:
+              ignore: production
+          requires:
+            - build
