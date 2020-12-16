@@ -47,9 +47,9 @@ export default function useApplicationData() {
           appointments,
         };
 
-        const targetDay = state.days.find((day) =>
-          day.appointments.includes(action.id)
-        );
+        const targetDay = state.days.find((day) => {
+          return day.appointments.includes(action.id);
+        });
 
         const days = state.days.map((day) => {
           if (day.name === targetDay.name) {
