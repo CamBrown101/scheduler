@@ -32,3 +32,15 @@ export function getInterview(state, interview) {
   interviewCopy.interviewer = state.interviewers[interview.interviewer];
   return interviewCopy;
 }
+
+const getEmptySpots = (state, nameOfDay) => {
+  const dayObject = state.days.find((day) => {
+    return day.name === nameOfDay;
+  });
+  const availibleSpaces = dayObject.appointments.filter((appointment) => {
+    return state.appointments[appointment].interview === null;
+  });
+  return availibleSpaces.length;
+};
+
+export { getEmptySpots };
