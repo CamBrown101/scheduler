@@ -19,6 +19,7 @@ const state = {
       interviewers: [1, 2],
     },
   ],
+
   appointments: {
     1: { id: 1, time: '12pm', interview: null },
     2: { id: 2, time: '1pm', interview: null },
@@ -34,6 +35,7 @@ const state = {
       interview: { student: 'Chad Takahashi', interviewer: 2 },
     },
   },
+
   interviewers: {
     1: {
       id: 1,
