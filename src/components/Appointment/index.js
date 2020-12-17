@@ -18,7 +18,6 @@ const CONFIRM = 'CONFIRM';
 const EDIT = 'EDIT';
 const ERROR_SAVE = 'ERROR_SAVE';
 const ERROR_DELETE = 'ERROR_DELETE';
-const ERROR_EMPTY = 'ERROR_EMPTY';
 
 export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(
@@ -61,6 +60,7 @@ export default function Appointment(props) {
           }}
         />
       )}
+
       {mode === EDIT && (
         <Form
           name={props.interview.student}
@@ -72,6 +72,7 @@ export default function Appointment(props) {
           onSave={save}
         />
       )}
+
       {mode === CREATE && (
         <Form
           name={props.student}
@@ -82,6 +83,7 @@ export default function Appointment(props) {
           onSave={save}
         />
       )}
+
       {mode === CONFIRM && (
         <Confirm
           message={'Are you sure?'}
@@ -89,11 +91,14 @@ export default function Appointment(props) {
           onCancel={back}
         />
       )}
+
       {mode === SAVING && <Status message={SAVING} />}
+
       {mode === ERROR_SAVE && (
         <Error onClose={back} message={'There was an error saving'} />
       )}
       {mode === DELETING && <Status message={DELETING} />}
+
       {mode === ERROR_DELETE && (
         <Error onClose={back} message={'There was an error deleting'} />
       )}
