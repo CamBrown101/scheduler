@@ -29,6 +29,12 @@ A React app for booking interviews with interviewers. As well as practise writti
 
 ## Screen Shots
 
+![4 diffrent modes of an interview container](https://github.com/CamBrown101/scheduler/blob/master/Docs/4-slot-views.png?raw=true)
+
+![The list of days an the diffrent displays they can be in as well as the available slots](https://github.com/CamBrown101/scheduler/blob/master/Docs/Days-view.png?raw=true)
+
+![A full screen screen shot of the app](https://github.com/CamBrown101/scheduler/blob/master/Docs/Full-page.png?raw=true)
+
 ## Getting Started
 
 - Fork and clone API from 'https://github.com/CamBrown101/scheduler-api'
