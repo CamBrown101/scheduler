@@ -4,6 +4,7 @@ export default function useVisualMode(initial) {
   const [mode, setMode] = useState(initial);
   const [history, setHistory] = useState([initial]);
 
+  //Sets up the ability to change what the user sees using modes
   const transition = (mode, replace = false) => {
     const newHistory = [...history];
 

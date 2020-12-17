@@ -1,3 +1,4 @@
+//Mocks axios for testing
 const fixtures = {
   days: [
     {
@@ -74,7 +75,6 @@ export default {
     }
 
     if (url === '/api/interviewers') {
-      /* Resolve interviewers data */
       return Promise.resolve({
         status: 200,
         statusText: 'OK',
@@ -83,14 +83,12 @@ export default {
     }
   }),
   put: jest.fn((url) => {
-    /* Resolve appointments data */
     return Promise.resolve({
       status: 200,
       statusText: 'No Content',
     });
   }),
   delete: jest.fn((url) => {
-    /* Resolve appointments data */
     return Promise.resolve({
       status: 200,
       statusText: 'Deleted',

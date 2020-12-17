@@ -25,12 +25,13 @@ export default function useApplicationData() {
     interviewers: {},
   });
 
+  //Makes a put request to the API to book an interview
   function bookInterview(id, interview) {
     return axios.put(`/api/appointments/${id}`, { interview }).then(() => {
       dispatch({ type: SET_INTERVIEW, id, interview });
     });
   }
-
+  //Deletes an interview
   function cancelInterview(id) {
     return axios.delete(`/api/appointments/${id}`).then(() => {
       dispatch({ type: SET_INTERVIEW, id, interview: null });

@@ -57,6 +57,3 @@ export default function Application(props) {
     </main>
   );
 }
-
-// dan abramov blog
-//west boss courses

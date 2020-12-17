@@ -35,6 +35,7 @@ export default function reducer(state, action) {
         appointments,
       };
 
+      //Sets the day we are targeting when we add or remove an interview
       const targetDay = state.days.find((day) => {
         return day.appointments.includes(action.id);
       });

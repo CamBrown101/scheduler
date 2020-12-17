@@ -8,11 +8,6 @@ export default function InterviewerListItem(props) {
     'interviewers__item-image': props.selected,
   });
 
-  // let interviewerName = '';
-  // if (props.selected) {
-  //   interviewerName = props.name;
-  // }
-
   return (
     <li className={interviewerClass} onClick={props.setInterviewer}>
       <img
