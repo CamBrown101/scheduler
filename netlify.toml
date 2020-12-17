@@ -9,7 +9,8 @@
   publish = "build/"
 
   # Default build command.
-  CI = "npm run build"
+  CI= npm run build
+  command = "npm run build"
 
 [build.environment]
   REACT_APP_API_BASE_URL = "https://scheduler-cam-brown.herokuapp.com/"
