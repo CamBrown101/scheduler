@@ -2,7 +2,7 @@
 
 ## Project Description
 
-A React app for booking interviews with interviewers. As well as practise writting diffrent types of tests and setting up testing enviroments as well as setting up CircleCI for continious intergration.
+A React app for booking interviews with interviewers. As well as practise writing different types of tests and setting up testing environments as well as setting up CircleCI for continuous integration.
 
 ## Features
 
