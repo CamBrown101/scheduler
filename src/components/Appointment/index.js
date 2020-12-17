@@ -97,12 +97,6 @@ export default function Appointment(props) {
       {mode === ERROR_DELETE && (
         <Error onClose={back} message={'There was an error deleting'} />
       )}
-      {mode === ERROR_EMPTY && (
-        <Error
-          onClose={back}
-          message={'You must input a name and choose an interviewer'}
-        />
-      )}
     </article>
   );
 }
